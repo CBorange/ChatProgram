@@ -1,0 +1,92 @@
+﻿<Window x:Class="ChatProgram.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ViewModel="clr-namespace:ChatProgram.ViewModel"
+        xmlns:local="clr-namespace:ChatProgram"
+        mc:Ignorable="d"
+        Title="TCP/IP 연습 프로그램" Height="615" Width="1518">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibliltyConverter"/>
+        <ViewModel:MainViewModel x:Key="MainViewModel"/>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource MainViewModel}">
+        <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Height="549" Margin="10,10,0,0" VerticalAlignment="Top" Width="562">
+            <Grid>
+                <TextBlock HorizontalAlignment="Left" Margin="8,10,0,0" TextWrapping="Wrap" Text="서버 IP" VerticalAlignment="Top"
+                   FontSize="20"/>
+                <TextBox HorizontalAlignment="Left" Height="35" Margin="8,42,0,0" TextWrapping="Wrap" Text="{Binding ServerIP}" VerticalAlignment="Top" Width="153"
+                 FontSize="20"/>
+                <TextBlock HorizontalAlignment="Left" Margin="166,10,0,0" TextWrapping="Wrap" Text="서버 제목" VerticalAlignment="Top"
+                   FontSize="20"/>
+                <TextBox HorizontalAlignment="Left" Height="35" Margin="166,42,0,0" TextWrapping="Wrap" Text="{Binding ServerTitle}" VerticalAlignment="Top" Width="384"
+                 FontSize="20"/>
+                <TextBlock HorizontalAlignment="Left" Margin="8,86,0,0" TextWrapping="Wrap" Text="서버 비밀번호" VerticalAlignment="Top"
+            FontSize="20"/>
+                <TextBox HorizontalAlignment="Left" Height="35" Margin="8,118,0,0" TextWrapping="Wrap" Text="{Binding ServerPassword}" VerticalAlignment="Top" Width="245"
+            FontSize="20"/>
+                <TextBlock HorizontalAlignment="Left" Margin="270,86,0,0" TextWrapping="Wrap" Text="서버 수용인원" VerticalAlignment="Top"
+            FontSize="20"/>
+                <TextBox HorizontalAlignment="Left" Height="35" Margin="270,118,0,0" TextWrapping="Wrap" Text="{Binding ServerCapacity}" VerticalAlignment="Top" Width="127"
+            FontSize="20"/>
+                <Button Content="서버 생성" HorizontalAlignment="Left" Margin="418,98,0,0" VerticalAlignment="Top" Width="132" Height="55"
+                FontSize="25" Command="{Binding IC_CreateServer}"/>
+                <TextBlock HorizontalAlignment="Left" Margin="8,179,0,0" TextWrapping="Wrap" Text="접속 IP" VerticalAlignment="Top"
+                    FontSize="20"/>
+                <TextBox HorizontalAlignment="Left" Height="35" Margin="8,211,0,0" TextWrapping="Wrap" Text="{Binding ConnectIP}" VerticalAlignment="Top" Width="153"
+                    FontSize="20"/>
+                <TextBlock HorizontalAlignment="Left" Margin="170,179,0,0" TextWrapping="Wrap" Text="접속 비밀번호" VerticalAlignment="Top"
+                    FontSize="20"/>
+                <TextBox HorizontalAlignment="Left" Height="35" Margin="170,211,0,0" TextWrapping="Wrap" Text="{Binding ConnectPassword}" VerticalAlignment="Top" Width="227"
+                    FontSize="20"/>
+                <Button Content="서버 접속" HorizontalAlignment="Left" Margin="418,196,0,0" VerticalAlignment="Top" Width="132" Height="55"
+                    FontSize="25" Command="{Binding IC_ConnectServer}"/>
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="281" Margin="0,266,0,0" VerticalAlignment="Top" Width="560"
+                        Visibility="{Binding ChatSettingPanelVisibility, Converter={StaticResource VisibliltyConverter}}">
+                    <Grid >
+                        <TextBox Text="{Binding Nickname}" Height="35" FontSize="20" Margin="10,41,164,203"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="10,9,0,0" TextWrapping="Wrap" Text="닉네임" VerticalAlignment="Top" FontSize="20"/>
+                        <TextBox Text="{Binding ChatColor}" Height="35" FontSize="20" Margin="10,179,164,65"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="10,147,0,0" TextWrapping="Wrap" Text="채팅 색상" VerticalAlignment="Top" FontSize="20"/>
+                        <Button Content="적용" HorizontalAlignment="Left" Margin="417,41,0,0" VerticalAlignment="Top" Width="114" Height="35" FontSize="20"
+                                Command="{Binding IC_ChangeNickname}"/>
+                        <Button Content="적용" HorizontalAlignment="Left" Margin="417,179,0,0" VerticalAlignment="Top" Width="114" Height="35" FontSize="20"
+                                Command="{Binding IC_ChangeChatColor}"/>
+                        <TextBox Text="{Binding NicknameColor}" Height="35" FontSize="20" Margin="10,110,164,134"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="10,78,0,0" TextWrapping="Wrap" Text="닉네임 색상" VerticalAlignment="Top" FontSize="20"/>
+                        <Button Content="적용" HorizontalAlignment="Left" Margin="417,110,0,0" VerticalAlignment="Top" Width="114" Height="35" FontSize="20"
+                                Command="{Binding IC_ChangeNicknameColor}"/>
+                        <Button Content="연결 종료" HorizontalAlignment="Left" Margin="417,234,0,0" VerticalAlignment="Top" Width="114" Height="35" FontSize="20"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+        <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Height="549" Margin="592,10,0,0" VerticalAlignment="Top" Width="890">
+            <Grid>
+                <ScrollViewer HorizontalAlignment="Left" Height="481" VerticalAlignment="Top" Width="888" Margin="0,30,0,0">
+                    <ItemsControl ItemsSource="{Binding ChatItems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Nickname}" Foreground="{Binding NicknameColor}" FontSize="20"/>
+                                    <TextBlock Text=" : " FontSize="20"/>
+                                    <TextBlock Text="{Binding ChatText}" Foreground="{Binding ChatTextColor}" FontSize="20" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Height="36" Margin="0,511,0,0" VerticalAlignment="Top" Width="802">
+                    <TextBox Text="{Binding ChatText}" FontSize="20" TextWrapping="Wrap"/>
+                </Border>
+                <Button Content="전송" HorizontalAlignment="Left" Margin="802,511,0,0" VerticalAlignment="Top" Width="86" Height="36"
+                        FontSize="20" Command="{Binding IC_SendMessage}"/>
+                <Border BorderBrush="Gray" BorderThickness="0" HorizontalAlignment="Left" Height="31" Margin="0,-1,0,0" VerticalAlignment="Top" Width="888">
+                    <TextBlock Text="{Binding ConnectStatusText}" FontSize="20" Foreground="{Binding ConnectStatusColor}"/>
+                </Border>
+
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

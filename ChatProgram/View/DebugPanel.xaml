@@ -1,0 +1,27 @@
+﻿<Window x:Class="ChatProgram.View.DebugPanel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChatProgram.View"
+        xmlns:ViewModel="clr-namespace:ChatProgram.ViewModel"
+        mc:Ignorable="d"
+        Title="DebugPanel" Height="768" Width="672">
+    <Window.Resources>
+        <ViewModel:DebugPanelVM x:Key="DebugPanelVM"/>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource DebugPanelVM}">
+        <ScrollViewer HorizontalAlignment="Left" Height="737" VerticalAlignment="Top" Width="664">
+            <ItemsControl ItemsSource="{Binding DebugTexts, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Text}" FontSize="25" Foreground="Black"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+    </Grid>
+</Window>
