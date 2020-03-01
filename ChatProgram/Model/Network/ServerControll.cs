@@ -58,7 +58,7 @@ namespace ChatProgram.Model.Network
             connectControllers = new List<ConnectController>();
 
             // MSGTYPE에 따른 함수 저장
-            messageDelegateArray = new MessageDelegate[5];
+            messageDelegateArray = new MessageDelegate[6];
             messageDelegateArray[0] = REQ_SERVER_CONNECT;
             messageDelegateArray[1] = REQ_CHANGE_NICKNAME;
             messageDelegateArray[2] = REQ_CHANGE_NICKNAME_COLOR;
