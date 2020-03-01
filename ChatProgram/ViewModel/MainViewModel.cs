@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -31,8 +32,6 @@ namespace ChatProgram.ViewModel
             Nickname = "홍길동";
             NicknameColor = Brushes.Green;
             ChatColor = Brushes.Black;
-            ChatItems = new ObservableCollection<ChatItem>();
-            BindingOperations.EnableCollectionSynchronization(ChatItems, myCollectionLock);
         }
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -53,7 +52,6 @@ namespace ChatProgram.ViewModel
         private ServerControll serverController;
         private ClientController clientController;
         private BrushConverter brushConverter;
-        private object myCollectionLock = new object();
 
         #region Binding_ServerProperty
         private string serverIP;
@@ -368,24 +366,30 @@ namespace ChatProgram.ViewModel
 
         public void AddChatText(string nickname, string nicknameColor, string chatColor, string chatBody)
         {
-            ChatItem newItem = new ChatItem();
-            newItem.Nickname = nickname;
-            newItem.NicknameColor = (Brush)brushConverter.ConvertFromString(nicknameColor);
-            newItem.ChatTextColor = (Brush)brushConverter.ConvertFromString(chatColor);
-            newItem.ChatText = chatBody;
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(new ThreadStart(() =>
+            {
+                ChatItem newItem = new ChatItem();
+                newItem.Nickname = nickname;
+                newItem.NicknameColor = (Brush)brushConverter.ConvertFromString(nicknameColor);
+                newItem.ChatTextColor = (Brush)brushConverter.ConvertFromString(chatColor);
+                newItem.ChatText = chatBody;
 
-            ChatItems.Add(newItem);
+                ChatItems.Add(newItem);
+            }));
         }
 
         public void AddChatText(string nickname, Brush nicknameColor, Brush chatColor, string chatBody)
         {
-            ChatItem newItem = new ChatItem();
-            newItem.Nickname = nickname;
-            newItem.NicknameColor = nicknameColor;
-            newItem.ChatTextColor = chatColor;
-            newItem.ChatText = chatBody;
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(new ThreadStart(() =>
+            {
+                ChatItem newItem = new ChatItem();
+                newItem.Nickname = nickname;
+                newItem.NicknameColor = nicknameColor;
+                newItem.ChatTextColor = chatColor;
+                newItem.ChatText = chatBody;
 
-            ChatItems.Add(newItem);
+                ChatItems.Add(newItem);
+            }));
         }
 
         public void ChangeServerStatus_CreateSuccese(string title)
