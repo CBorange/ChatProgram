@@ -61,9 +61,10 @@ namespace ChatProgram.Model.Network
             messageDelegateArray = new MessageDelegate[5];
             messageDelegateArray[0] = REQ_SERVER_CONNECT;
             messageDelegateArray[1] = REQ_CHANGE_NICKNAME;
-            messageDelegateArray[2] = REQ_CHANGE_COLOR;
-            messageDelegateArray[3] = REQ_CHAT_TRANSMIT;
-            messageDelegateArray[4] = REQ_LOST_CONNECT;
+            messageDelegateArray[2] = REQ_CHANGE_NICKNAME_COLOR;
+            messageDelegateArray[3] = REQ_CHANGE_CHAT_COLOR;
+            messageDelegateArray[4] = REQ_CHAT_TRANSMIT;
+            messageDelegateArray[5] = REQ_LOST_CONNECT;
         }
 
         public void StartServer(string serverIP, string serverPassword, string serverTitle, int serverCapacity)
@@ -178,7 +179,12 @@ namespace ChatProgram.Model.Network
 
         }
 
-        private void REQ_CHANGE_COLOR(ConnectController controller, string msg)
+        private void REQ_CHANGE_NICKNAME_COLOR(ConnectController controller, string msg)
+        {
+
+        }
+
+        private void REQ_CHANGE_CHAT_COLOR(ConnectController controller, string msg)
         {
 
         }
