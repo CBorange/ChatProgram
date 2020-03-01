@@ -153,7 +153,9 @@ namespace ChatProgram.Model.Network
             string[] splitedCSV = msg.Split(',');
             if (Password != splitedCSV[0])  
             {
+                connectControllers.Remove(controller);
                 controller.isConnected = false;
+                controller.getMessageState = MessageState.LostConnect;
                 MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_FAIL, "ConnectFail", controller.transmitStream);
                 return;
             }
@@ -163,7 +165,9 @@ namespace ChatProgram.Model.Network
             controller.UserNicknameColor = splitedCSV[2];
             controller.UserChatColor = splitedCSV[3];
             controller.isConnected = true;
-            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SERVER_TITLE, ServerTitle, controller.transmitStream);
+
+            string titleMessage = $"{ServerTitle}:{connectControllers.Count + 1}명";
+            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SERVER_TITLE, titleMessage, controller.transmitStream);
         }
 
         private void REQ_CHANGE_NICKNAME(ConnectController controller, string msg)
@@ -189,6 +193,7 @@ namespace ChatProgram.Model.Network
 
         private void REQ_LOST_CONNECT(ConnectController controller, string msg)
         {
+            connectControllers.Remove(controller);
             controller.getMessageState = MessageState.LostConnect;
             controller.isConnected = false;
         }
