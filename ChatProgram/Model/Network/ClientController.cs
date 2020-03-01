@@ -96,6 +96,7 @@ namespace ChatProgram.Model.Network
                             string msg = await MessageUtil.Instance.ReadMessageBody
                                 (controller.transmitStream, controller.messageHeader.BODYLEN);
                             messageDelegateArray[controller.messageHeader.MSGTYPE - 1](controller, msg);
+                            controller.getMessageState = MessageState.MessageHeader;
                         }
                         break;
                     default:
