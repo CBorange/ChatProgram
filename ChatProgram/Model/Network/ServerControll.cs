@@ -136,11 +136,12 @@ namespace ChatProgram.Model.Network
         public void WriteText(string chatBody)
         {
             // View에 먼저 채팅내용 추가
-            mainVM.AddChatText(mainVM.Nickname, mainVM.NicknameColor, mainVM.ChatColor, chatBody);
+            mainVM.AddChatText($"[서버]{mainVM.Nickname}", mainVM.NicknameColor, mainVM.ChatColor, chatBody);
             // 연결된 클라이언트들 Send Message
             for (int i = 0; i < connectControllers.Count; ++i)
             {
-                string msg = $"{connectControllers[i].UserNickname},{connectControllers[i].UserNicknameColor},{connectControllers[i].UserChatColor},{chatBody}";
+                string nickname = $"[서버]{mainVM.Nickname}";
+                string msg = $"{nickname},{mainVM.NicknameColor},{mainVM.ChatColor},{chatBody}";
                 MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CHAT_TRANSMIT, msg, connectControllers[i].transmitStream);
             }
         }
