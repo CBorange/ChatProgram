@@ -32,6 +32,7 @@ namespace ChatProgram.ViewModel
             Nickname = "홍길동";
             NicknameColor = Brushes.Green;
             ChatColor = Brushes.Black;
+            ChatItems = new ObservableCollection<ChatItem>();
         }
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
