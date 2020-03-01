@@ -57,15 +57,14 @@ namespace ChatProgram.Model.Network
 
         private void ConnectToServer()
         {
-            IPAddress adress = IPAddress.Parse(connectIP);
-            IPEndPoint ip = new IPEndPoint(adress, 7000);
             TcpClient tc = null;
             try
             {
-                tc = new TcpClient(ip);
+                tc = new TcpClient(connectIP, 7000);
             }
             catch(Exception e)
             {
+                DebugPanelVM.Instance.Print(e.Message);
                 return;
             }
 
