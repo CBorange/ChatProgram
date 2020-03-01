@@ -92,7 +92,7 @@ namespace ChatProgram.Model.ChatProtocol
                 (buffer, 0, Convert.ToInt32(bodyLength));
             if (byteLength > 0)
             {
-                string msg = Encoding.Unicode.GetString(buffer, 0, byteLength);
+                string msg = Encoding.UTF8.GetString(buffer, 0, byteLength);
                 return msg;
             }
             return null;
