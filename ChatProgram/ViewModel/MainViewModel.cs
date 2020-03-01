@@ -382,7 +382,8 @@ namespace ChatProgram.ViewModel
             newItem.ChatTextColor = chatColor;
             newItem.ChatText = chatBody;
 
-            ChatItems.Add(newItem);
+            Action<ChatItem> addMethod = ChatItems.Add;
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(addMethod, newItem);
         }
 
         public void ChangeServerStatus_CreateSuccese(string title)
