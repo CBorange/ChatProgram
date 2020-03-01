@@ -371,7 +371,8 @@ namespace ChatProgram.ViewModel
             newItem.ChatTextColor = (Brush)brushConverter.ConvertFromString(chatColor);
             newItem.ChatText = chatBody;
 
-            ChatItems.Add(newItem);
+            Action<ChatItem> addMethod = ChatItems.Add;
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(addMethod, newItem);
         }
 
         public void AddChatText(string nickname, Brush nicknameColor, Brush chatColor, string chatBody)
