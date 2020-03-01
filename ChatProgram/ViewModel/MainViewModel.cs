@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Forms;
+using System.Windows.Data;
 using ChatProgram.Util;
 using ChatProgram.Model.Network;
 using ChatProgram.Model.ChatProtocol;
@@ -16,11 +17,6 @@ namespace ChatProgram.ViewModel
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        public static void AddOnUI<T>(ICollection<T> collection, T item)
-        {
-            Action<T> addMethod = collection.Add;
-            System.Windows.Application.Current.Dispatcher.BeginInvoke(addMethod, item);
-        }
         public MainViewModel()
         {
             chatProgramIsStart = false;
@@ -36,6 +32,7 @@ namespace ChatProgram.ViewModel
             NicknameColor = Brushes.Green;
             ChatColor = Brushes.Black;
             ChatItems = new ObservableCollection<ChatItem>();
+            BindingOperations.EnableCollectionSynchronization(ChatItems, myCollectionLock);
         }
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -56,6 +53,7 @@ namespace ChatProgram.ViewModel
         private ServerControll serverController;
         private ClientController clientController;
         private BrushConverter brushConverter;
+        private object myCollectionLock = new object();
 
         #region Binding_ServerProperty
         private string serverIP;
@@ -376,7 +374,7 @@ namespace ChatProgram.ViewModel
             newItem.ChatTextColor = (Brush)brushConverter.ConvertFromString(chatColor);
             newItem.ChatText = chatBody;
 
-            AddOnUI(ChatItems, newItem);
+            ChatItems.Add(newItem);
         }
 
         public void AddChatText(string nickname, Brush nicknameColor, Brush chatColor, string chatBody)
@@ -387,7 +385,7 @@ namespace ChatProgram.ViewModel
             newItem.ChatTextColor = chatColor;
             newItem.ChatText = chatBody;
 
-            AddOnUI(ChatItems, newItem);
+            ChatItems.Add(newItem);
         }
 
         public void ChangeServerStatus_CreateSuccese(string title)
