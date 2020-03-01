@@ -104,7 +104,6 @@ namespace ChatProgram.Model.Network
 
             while (controller.isConnected)
             {
-                DebugPanelVM.Instance.Print("read");
                 switch (controller.getMessageState)
                 {
                     case MessageState.MessageHeader:

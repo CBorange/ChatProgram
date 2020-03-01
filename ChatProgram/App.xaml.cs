@@ -18,9 +18,6 @@ namespace ChatProgram
         {
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
-
-            DebugPanel debugPanel = new DebugPanel();
-            debugPanel.Show();
         }
     }
 }

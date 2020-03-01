@@ -76,8 +76,9 @@ namespace ChatProgram.Model.ChatProtocol
                 Array.Copy(buffer, 0, msgTypeBytes, 0, 4);
                 Array.Copy(buffer, 4, msgBodyLengthBytes, 0, 4);
                 MessageHeader messageHeader = new MessageHeader();
-                messageHeader.MSGTYPE = Convert.ToUInt32(msgTypeBytes);
-                messageHeader.BODYLEN = Convert.ToUInt32(msgBodyLengthBytes);
+                
+                messageHeader.MSGTYPE = BitConverter.ToUInt32(msgTypeBytes, 0);
+                messageHeader.BODYLEN = BitConverter.ToUInt32(msgBodyLengthBytes, 0);
 
                 return messageHeader;
             }
