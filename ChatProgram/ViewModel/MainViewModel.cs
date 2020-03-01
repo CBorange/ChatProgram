@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using ChatProgram.Util;
 using ChatProgram.Model.Network;
 using ChatProgram.Model.ChatProtocol;
+using System.Collections.ObjectModel;
 
 namespace ChatProgram.ViewModel
 {
@@ -29,8 +30,6 @@ namespace ChatProgram.ViewModel
             Nickname = "홍길동";
             NicknameColor = Brushes.Green;
             ChatColor = Brushes.Black;
-
-            ChatItems = new List<ChatItem>();
         }
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -201,8 +200,8 @@ namespace ChatProgram.ViewModel
             }
         }
 
-        private List<ChatItem> chatItems;
-        public List<ChatItem> ChatItems
+        private ObservableCollection<ChatItem> chatItems;
+        public ObservableCollection<ChatItem> ChatItems
         {
             get { return chatItems; }
             set
