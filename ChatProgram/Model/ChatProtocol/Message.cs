@@ -64,7 +64,7 @@ namespace ChatProgram.Model.ChatProtocol
 
         }
 
-        public Task<MessageHeader> ReadMessageHeader(NetworkStream stream)
+        public async Task<MessageHeader> ReadMessageHeader(NetworkStream stream)
         {
             MessageHeader messageHeader = new MessageHeader();
             byte[] buffer = new byte[8];
