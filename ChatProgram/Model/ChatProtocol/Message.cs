@@ -108,10 +108,10 @@ namespace ChatProgram.Model.ChatProtocol
             newHeader.BODYLEN = (uint)textBytes.Length;
             headerBytes = newHeader.GetBytes();
 
-            // Body 입력
-            stream.Write(textBytes, 0, textBytes.Length);
             // Header 입력
             stream.Write(headerBytes, 0, 8);
+            // Body 입력
+            stream.Write(textBytes, 0, textBytes.Length);
         }
     }
 }
