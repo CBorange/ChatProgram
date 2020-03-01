@@ -70,17 +70,20 @@ namespace ChatProgram.Model.ChatProtocol
             await Task.Run(() =>
             {
                 byte[] buffer = new byte[8];
-                int byteLength = stream.Read(buffer, 0, 8);
-                if (byteLength >= 8)
+                while (true)
                 {
-                    // 읽어온 메시지 헤더 byte배열 분리후 MessageHeader 구조체로 변환
-                    byte[] msgTypeBytes = new byte[4];
-                    byte[] msgBodyLengthBytes = new byte[4];
-                    Array.Copy(buffer, 0, msgTypeBytes, 0, 4);
-                    Array.Copy(buffer, 4, msgBodyLengthBytes, 0, 4);
+                    int byteLength = stream.Read(buffer, 0, 8);
+                    if (byteLength >= 8)
+                    {
+                        // 읽어온 메시지 헤더 byte배열 분리후 MessageHeader 구조체로 변환
+                        byte[] msgTypeBytes = new byte[4];
+                        byte[] msgBodyLengthBytes = new byte[4];
+                        Array.Copy(buffer, 0, msgTypeBytes, 0, 4);
+                        Array.Copy(buffer, 4, msgBodyLengthBytes, 0, 4);
 
-                    messageHeader.MSGTYPE = BitConverter.ToUInt32(msgTypeBytes, 0);
-                    messageHeader.BODYLEN = BitConverter.ToUInt32(msgBodyLengthBytes, 0);
+                        messageHeader.MSGTYPE = BitConverter.ToUInt32(msgTypeBytes, 0);
+                        messageHeader.BODYLEN = BitConverter.ToUInt32(msgBodyLengthBytes, 0);
+                    }
                 }
             });
             return messageHeader;
@@ -92,10 +95,13 @@ namespace ChatProgram.Model.ChatProtocol
             await Task.Run(() =>
             {
                 byte[] buffer = new byte[bodyLength];
-                int byteLength = stream.Read(buffer, 0, Convert.ToInt32(bodyLength));
-                if (byteLength >= bodyLength)
+                while (true)
                 {
-                    msg = Encoding.UTF8.GetString(buffer, 0, byteLength);
+                    int byteLength = stream.Read(buffer, 0, Convert.ToInt32(bodyLength));
+                    if (byteLength >= bodyLength)
+                    {
+                        msg = Encoding.UTF8.GetString(buffer, 0, byteLength);
+                    }
                 }
             });
             
