@@ -16,6 +16,11 @@ namespace ChatProgram.ViewModel
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+        public static void AddOnUI<T>(ICollection<T> collection, T item)
+        {
+            Action<T> addMethod = collection.Add;
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(addMethod, item);
+        }
         public MainViewModel()
         {
             chatProgramIsStart = false;
@@ -371,8 +376,7 @@ namespace ChatProgram.ViewModel
             newItem.ChatTextColor = (Brush)brushConverter.ConvertFromString(chatColor);
             newItem.ChatText = chatBody;
 
-            Action<ChatItem> addMethod = ChatItems.Add;
-            System.Windows.Application.Current.Dispatcher.BeginInvoke(addMethod, newItem);
+            AddOnUI(ChatItems, newItem);
         }
 
         public void AddChatText(string nickname, Brush nicknameColor, Brush chatColor, string chatBody)
@@ -383,8 +387,7 @@ namespace ChatProgram.ViewModel
             newItem.ChatTextColor = chatColor;
             newItem.ChatText = chatBody;
 
-            Action<ChatItem> addMethod = ChatItems.Add;
-            System.Windows.Application.Current.Dispatcher.BeginInvoke(addMethod, newItem);
+            AddOnUI(ChatItems, newItem);
         }
 
         public void ChangeServerStatus_CreateSuccese(string title)
