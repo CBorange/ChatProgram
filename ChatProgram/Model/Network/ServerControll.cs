@@ -166,7 +166,9 @@ namespace ChatProgram.Model.Network
             controller.UserChatColor = splitedCSV[3];
             controller.isConnected = true;
 
-            string titleMessage = $"{ServerTitle}:{connectControllers.Count + 1}명";
+            
+            string titleMessage = $"{ServerTitle} : {connectControllers.Count + 1}명 연결중";
+            mainVM.ChangeServerStatus_CreateSuccese(titleMessage);
             MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SERVER_TITLE, titleMessage, controller.transmitStream);
         }
 
