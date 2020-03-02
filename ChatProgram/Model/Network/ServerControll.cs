@@ -46,6 +46,7 @@ namespace ChatProgram.Model.Network
         private List<ConnectController> connectControllers;
         private MessageDelegate[] messageDelegateArray;
         private MainViewModel mainVM;
+        private TcpListener tcpListener;
 
         #endregion
 
@@ -83,11 +84,18 @@ namespace ChatProgram.Model.Network
             IPAddress adress = IPAddress.Parse(serverIP);
             IPEndPoint ip = new IPEndPoint(adress, 7000);
 
-            TcpListener listener = new TcpListener(ip);
-            listener.Start();
+            tcpListener = new TcpListener(ip);
+            tcpListener.Start();
             while (true)
             {
-                TcpClient tc = await listener.AcceptTcpClientAsync().ConfigureAwait(false);
+                try
+                {
+                    TcpClient tc = await tcpListener.AcceptTcpClientAsync().ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    return;
+                }
                 ConnectController conectController = new ConnectController();
                 conectController.isConnected = true;
                 conectController.connectedClient = tc;
@@ -155,6 +163,9 @@ namespace ChatProgram.Model.Network
             {
                 MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_LOST, "ConnectLost_FromServer", connectControllers[i].transmitStream);
             }
+
+            connectControllers.Clear();
+            tcpListener.Stop();
         }
 
         #endregion
