@@ -91,17 +91,17 @@ namespace ChatProgram.Model.Network
                 try
                 {
                     TcpClient tc = await tcpListener.AcceptTcpClientAsync().ConfigureAwait(false);
+                    ConnectController conectController = new ConnectController();
+                    conectController.isConnected = true;
+                    conectController.connectedClient = tc;
+                    connectControllers.Add(conectController);
+
+                    Task.Factory.StartNew(AsyncReadFromClient, conectController);
                 }
                 catch (Exception e)
                 {
                     return;
                 }
-                ConnectController conectController = new ConnectController();
-                conectController.isConnected = true;
-                conectController.connectedClient = tc;
-                connectControllers.Add(conectController);
-
-                Task.Factory.StartNew(AsyncReadFromClient, conectController);
             }
         }
 
