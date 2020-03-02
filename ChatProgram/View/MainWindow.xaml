@@ -57,7 +57,8 @@
                         <TextBlock HorizontalAlignment="Left" Margin="10,78,0,0" TextWrapping="Wrap" Text="닉네임 색상" VerticalAlignment="Top" FontSize="20"/>
                         <Button Content="적용" HorizontalAlignment="Left" Margin="417,110,0,0" VerticalAlignment="Top" Width="114" Height="35" FontSize="20"
                                 Command="{Binding IC_ChangeNicknameColor}"/>
-                        <Button Content="연결 종료" HorizontalAlignment="Left" Margin="417,234,0,0" VerticalAlignment="Top" Width="114" Height="35" FontSize="20"/>
+                        <Button Content="연결 종료" HorizontalAlignment="Left" Margin="417,234,0,0" VerticalAlignment="Top" Width="114" Height="35" FontSize="20"
+                                Command="{Binding IC_LostConnect}"/>
                     </Grid>
                 </Border>
             </Grid>

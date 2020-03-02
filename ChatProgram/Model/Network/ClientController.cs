@@ -147,6 +147,7 @@ namespace ChatProgram.Model.Network
             controller.isConnected = false;
 
             mainVM.Show_ConnectLostPopup($"서버 연결 종료됨 : {msg}");
+            mainVM.ChangeServerStatus_LostConnect();
         }
 
         private void SEND_SERVER_TITLE(ConnectController controller, string msg)

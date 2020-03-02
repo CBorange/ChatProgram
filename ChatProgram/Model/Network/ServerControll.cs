@@ -149,7 +149,12 @@ namespace ChatProgram.Model.Network
 
         public void LostConnect()
         {
-
+            mainVM.Show_ConnectLostPopup("ConnectLost");
+            mainVM.ChangeServerStatus_LostConnect();
+            for (int i = 0; i < connectControllers.Count; ++i)
+            {
+                MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_LOST, "ConnectLost_FromServer", connectControllers[i].transmitStream);
+            }
         }
 
         #endregion
