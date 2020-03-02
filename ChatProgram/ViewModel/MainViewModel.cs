@@ -396,10 +396,7 @@ namespace ChatProgram.ViewModel
                     MessageBox.Show("서버를 종료하였습니다.");
                 }
                 else
-                {
                     clientController.LostConnect();
-                    MessageBox.Show("연결을 종료하였습니다.");
-                }
             }
             else
                 MessageBox.Show("먼저 접속하여 주세요.", "오류", MessageBoxButtons.OK);
@@ -466,6 +463,7 @@ namespace ChatProgram.ViewModel
 
         public void ChangeServerStatus_LostConnect()
         {
+            chatProgramIsStart = false;
             ChatSettingPanelVisibility = false;
             ConnectStatusText = "서버 생성/연결 되지않음";
             ConnectStatusColor = Brushes.Red;

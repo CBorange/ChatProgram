@@ -178,7 +178,8 @@ namespace ChatProgram.Model.Network
 
         private void SEND_SUCCESE_CHANGENICKNAMECOLOR(ConnectController controller, string msg)
         {
-            if (mainVM.Nickname.Equals(msg))
+            string colorCode = mainVM.NicknameColor.ToString();
+            if (colorCode.Equals(msg))
                 mainVM.Succese_ChangeProperty("닉네임색상");
             else
                 mainVM.Failed_ChangeProperty("닉네임색상");
@@ -186,7 +187,8 @@ namespace ChatProgram.Model.Network
 
         private void SEND_SUCCESE_CHANGECHATCOLOR(ConnectController controller, string msg)
         {
-            if (mainVM.Nickname.Equals(msg))
+            string colorCode = mainVM.ChatColor.ToString();
+            if (colorCode.Equals(msg))
                 mainVM.Succese_ChangeProperty("채팅색상");
             else
                 mainVM.Failed_ChangeProperty("채팅색상");

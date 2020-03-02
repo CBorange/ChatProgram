@@ -223,6 +223,15 @@ namespace ChatProgram.Model.Network
             string titleMessage = $"{ServerTitle} : {connectControllers.Count + 1}명 연결중";
             mainVM.ChangeServerStatus_CreateSuccese(titleMessage);
             MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_LOST, "ConnectLost", controller.transmitStream);
+
+            // 연결 종료 알림
+            mainVM.AddChatText($"[서버]", mainVM.NicknameColor, mainVM.ChatColor, $"{controller.UserNickname}의 연결이 종료되었습니다.");
+            for (int i = 0; i < connectControllers.Count; ++i)
+            {
+                string body = $"{controller.UserNickname}의 연결이 종료되었습니다.";
+                string sendMessage = $"[서버],{mainVM.NicknameColor},{mainVM.ChatColor},{body}";
+                MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CHAT_TRANSMIT, sendMessage, connectControllers[i].transmitStream);
+            }
         }
         #endregion
     }
