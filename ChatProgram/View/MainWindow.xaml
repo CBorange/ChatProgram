@@ -6,7 +6,7 @@
         xmlns:ViewModel="clr-namespace:ChatProgram.ViewModel"
         xmlns:local="clr-namespace:ChatProgram"
         mc:Ignorable="d"
-        Title="TCP/IP 연습 프로그램" Height="615" Width="1518">
+        Title="TCP/IP 채팅 프로그램 v0.1" Height="615" Width="1518">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="VisibliltyConverter"/>
         <ViewModel:MainViewModel x:Key="MainViewModel"/>
@@ -30,8 +30,8 @@
             FontSize="20"/>
                 <TextBox HorizontalAlignment="Left" Height="35" Margin="270,118,0,0" TextWrapping="Wrap" Text="{Binding ServerCapacity}" VerticalAlignment="Top" Width="127"
             FontSize="20"/>
-                <Button Content="서버 생성" HorizontalAlignment="Left" Margin="418,98,0,0" VerticalAlignment="Top" Width="132" Height="55"
-                FontSize="25" Command="{Binding IC_CreateServer}"/>
+                <Button Content="서버 생성" HorizontalAlignment="Left" Margin="432,104,0,0" VerticalAlignment="Top" Width="118" Height="49"
+                FontSize="20" Command="{Binding IC_CreateServer}"/>
                 <TextBlock HorizontalAlignment="Left" Margin="8,179,0,0" TextWrapping="Wrap" Text="접속 IP" VerticalAlignment="Top"
                     FontSize="20"/>
                 <TextBox HorizontalAlignment="Left" Height="35" Margin="8,211,0,0" TextWrapping="Wrap" Text="{Binding ConnectIP}" VerticalAlignment="Top" Width="153"
@@ -40,8 +40,8 @@
                     FontSize="20"/>
                 <TextBox HorizontalAlignment="Left" Height="35" Margin="170,211,0,0" TextWrapping="Wrap" Text="{Binding ConnectPassword}" VerticalAlignment="Top" Width="227"
                     FontSize="20"/>
-                <Button Content="서버 접속" HorizontalAlignment="Left" Margin="418,196,0,0" VerticalAlignment="Top" Width="132" Height="55"
-                    FontSize="25" Command="{Binding IC_ConnectServer}"/>
+                <Button Content="서버 접속" HorizontalAlignment="Left" Margin="432,197,0,0" VerticalAlignment="Top" Width="118" Height="49"
+                    FontSize="20" Command="{Binding IC_ConnectServer}"/>
                 <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="281" Margin="0,266,0,0" VerticalAlignment="Top" Width="560"
                         Visibility="{Binding ChatSettingPanelVisibility, Converter={StaticResource VisibliltyConverter}}">
                     <Grid >
@@ -82,7 +82,7 @@
                     <TextBox Text="{Binding ChatText}" FontSize="20" TextWrapping="Wrap"/>
                 </Border>
                 <Button Content="전송" HorizontalAlignment="Left" Margin="802,511,0,0" VerticalAlignment="Top" Width="86" Height="36"
-                        FontSize="20" Command="{Binding IC_SendMessage}"/>
+                        FontSize="15" Command="{Binding IC_SendMessage}"/>
                 <Border BorderBrush="Gray" BorderThickness="0" HorizontalAlignment="Left" Height="31" Margin="0,-1,0,0" VerticalAlignment="Top" Width="888">
                     <TextBlock Text="{Binding ConnectStatusText}" FontSize="20" Foreground="{Binding ConnectStatusColor}"/>
                 </Border>
