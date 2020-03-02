@@ -24,14 +24,14 @@ namespace ChatProgram.ViewModel
             brushConverter = new BrushConverter();
             serverController = new ServerControll(this);
             clientController = new ClientController(this);
-            ChatSettingPanelVisibility = false;
 
+            ChatSettingPanelVisibility = false;
             ConnectStatusText = "서버 생성/연결 되지않음";
             ConnectStatusColor = Brushes.Red;
-
             Nickname = "홍길동";
             NicknameColor = Brushes.Green;
             ChatColor = Brushes.Black;
+
             ChatItems = new ObservableCollection<ChatItem>();
         }
         #region PropertyChanged
@@ -49,11 +49,10 @@ namespace ChatProgram.ViewModel
         #endregion
 
         private bool chatProgramIsStart;
-        private StringPropertyDelegate writeTextCallback;
         private ServerControll serverController;
         private ClientController clientController;
         private BrushConverter brushConverter;
-
+        private MainController mainController;
         #region Binding_ServerProperty
         private string serverIP;
         public string ServerIP
@@ -265,6 +264,7 @@ namespace ChatProgram.ViewModel
         #region Bind Command Declaration
         private void CreateServer()
         {
+            // 유효성 검사
             if (String.IsNullOrWhiteSpace(ServerIP) || String.IsNullOrWhiteSpace(ServerCapacity) ||
                 String.IsNullOrWhiteSpace(ServerPassword) || String.IsNullOrWhiteSpace(ServerTitle))
             {
@@ -292,13 +292,15 @@ namespace ChatProgram.ViewModel
             }
 
 
+            // 실행
             if (!chatProgramIsStart)
             {
-                ChangeServerStatus_CreateSuccese(ServerTitle);
-                serverController.StartServer(ServerIP, ServerPassword, ServerTitle, serverCapacityInteger);
-                writeTextCallback = serverController.WriteText;
+                mainController = MainController.ServerController;
                 chatProgramIsStart = true;
                 ChatSettingPanelVisibility = true;
+
+                ChangeServerStatus_CreateSuccese(ServerTitle);
+                serverController.StartServer(ServerIP, ServerPassword, ServerTitle, serverCapacityInteger);
             }
             else
                 MessageBox.Show("이미 접속중입니다.", "오류", MessageBoxButtons.OK);
@@ -306,6 +308,7 @@ namespace ChatProgram.ViewModel
 
         private void ConnectServer()
         {
+            // 유효성 검사
             if (String.IsNullOrWhiteSpace(ConnectIP) || String.IsNullOrWhiteSpace(ConnectPassword))
             {
                 MessageBox.Show("접속 프로퍼티를 모두 입력해주세요.", "접속 프로퍼티 오류", MessageBoxButtons.OK);
@@ -318,12 +321,14 @@ namespace ChatProgram.ViewModel
                 return;
             }
 
+            // 실행
             if (!chatProgramIsStart)
             {
-                clientController.ConnectToServer(ConnectIP, ConnectPassword);
-                writeTextCallback = clientController.WriteText;
+                mainController = MainController.ClientController;
                 chatProgramIsStart = true;
                 ChatSettingPanelVisibility = true;
+
+                clientController.ConnectToServer(ConnectIP, ConnectPassword);
             }
             else
                 MessageBox.Show("이미 접속중입니다.", "오류", MessageBoxButtons.OK);
@@ -332,37 +337,81 @@ namespace ChatProgram.ViewModel
         private void SendMessage()
         {
             if (chatProgramIsStart)
-                writeTextCallback(ChatText);
+            {
+                if (mainController == MainController.ServerController)
+                    serverController.WriteText(ChatText);
+                else
+                    clientController.WriteText(ChatText);
+            }
             else
                 MessageBox.Show("먼저 접속하여 주세요.", "오류", MessageBoxButtons.OK);
         }
 
         private void ChangeNickname()
         {
-
+            if (chatProgramIsStart)
+            {
+                if (mainController == MainController.ServerController)
+                    MessageBox.Show("닉네임이 변경되었습니다.");
+                else
+                    clientController.ChangeNickname(Nickname);
+            }
+            else
+                MessageBox.Show("먼저 접속하여 주세요.", "오류", MessageBoxButtons.OK);
         }
 
         private void ChangeNicknameColor()
         {
-
+            if (chatProgramIsStart)
+            {
+                if (mainController == MainController.ServerController)
+                    MessageBox.Show("닉네임 색상이 변경되었습니다.");
+                else
+                    clientController.ChangeNicknameColor(NicknameColor.ToString());
+            }
+            else
+                MessageBox.Show("먼저 접속하여 주세요.", "오류", MessageBoxButtons.OK);
         }
 
         private void ChangeChatColor()
         {
-
+            if (chatProgramIsStart)
+            {
+                if (mainController == MainController.ServerController)
+                    MessageBox.Show("채팅 색상이 변경되었습니다.");
+                else
+                    clientController.ChangeChatColor(ChatColor.ToString());
+            }
+            else
+                MessageBox.Show("먼저 접속하여 주세요.", "오류", MessageBoxButtons.OK);
         }
 
         private void LostConnect()
         {
-
+            if (chatProgramIsStart)
+            {
+                if (mainController == MainController.ServerController)
+                {
+                    serverController.LostConnect();
+                    MessageBox.Show("서버를 종료하였습니다.");
+                }
+                else
+                {
+                    clientController.LostConnect();
+                    MessageBox.Show("연결을 종료하였습니다.");
+                }
+            }
+            else
+                MessageBox.Show("먼저 접속하여 주세요.", "오류", MessageBoxButtons.OK);
         }
 
         #endregion
 
         #region Called By Network Controller Callback
-        public void Show_ConnectFailPopup()
+        public void Show_ConnectLostPopup(string message)
         {
-            MessageBox.Show("서버 연결에 실패하였습니다.", "서버 연결 실패", MessageBoxButtons.OK);
+            MessageBox.Show(message, "서버 연결 종료됨", MessageBoxButtons.OK);
+            ChangeServerStatus_LostConnect();
         }
 
         public void AddChatText(string nickname, string nicknameColor, string chatColor, string chatBody)
@@ -393,6 +442,16 @@ namespace ChatProgram.ViewModel
             }));
         }
 
+        public void Succese_ChangeProperty(string changedProperty)
+        {
+            MessageBox.Show($"{changedProperty}이 변경되었습니다.", $"{changedProperty}변경", MessageBoxButtons.OK);
+        }
+
+        public void Failed_ChangeProperty(string failedProperty)
+        {
+            MessageBox.Show($"{failedProperty} 변경에 실패했습니다.", $"{failedProperty}변경 실패", MessageBoxButtons.OK);
+        }
+
         public void ChangeServerStatus_CreateSuccese(string title)
         {
             ConnectStatusColor = Brushes.Green;
@@ -403,6 +462,21 @@ namespace ChatProgram.ViewModel
         {
             ConnectStatusColor = Brushes.Green;
             ConnectStatusText = $"서버 연결됨 : {title}";
+        }
+
+        public void ChangeServerStatus_LostConnect()
+        {
+            ChatSettingPanelVisibility = false;
+            ConnectStatusText = "서버 생성/연결 되지않음";
+            ConnectStatusColor = Brushes.Red;
+            Nickname = "홍길동";
+            NicknameColor = Brushes.Green;
+            ChatColor = Brushes.Black;
+
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(new ThreadStart(() =>
+            {
+                ChatItems.Clear();
+            }));
         }
         #endregion
     }

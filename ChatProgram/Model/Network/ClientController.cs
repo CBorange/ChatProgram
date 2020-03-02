@@ -41,10 +41,13 @@ namespace ChatProgram.Model.Network
             controller = new ConnectController();
 
             // MSGTYPE에 따른 함수 저장
-            messageDelegateArray = new MessageDelegate[3];
-            messageDelegateArray[0] = SEND_CONNECT_FAIL;
+            messageDelegateArray = new MessageDelegate[7];
+            messageDelegateArray[0] = SEND_CONNECT_LOST;
             messageDelegateArray[1] = SEND_SERVER_TITLE;
             messageDelegateArray[2] = SEND_CHAT_TRANSMIT;
+            messageDelegateArray[3] = SEND_SUCCESE_CHANGENICKNAME;
+            messageDelegateArray[4] = SEND_SUCCESE_CHANGENICKNAMECOLOR;
+            messageDelegateArray[5] = SEND_SUCCESE_CHANGECHATCOLOR;
         }
 
         public void ConnectToServer(string connectIP, string connectPassword)
@@ -110,20 +113,40 @@ namespace ChatProgram.Model.Network
         }
 
         #region Method Connected By MainVM
+        // 모든 View->Client 로의 요청은 바로 다시 View에 반영되지 않고 Server에서 Recieve받은 뒤 변경 됨
         public void WriteText(string chatBody)
         {
-            // 클라이언트는 바로 view에 AddChat하지않고 서버에 요청하여 SEND_CHAT_TRANSMIT 메시지가 들어오면 내 View에 AddChat
-            // 여기서는 Send Message만 실행
             MessageUtil.Instance.SendMessage(REQ_TO_SERVER_DEFINE.REQ_CHAT_TRANSMIT, chatBody, controller.transmitStream);
+        }
+
+        public void ChangeNickname(string nickname)
+        {
+            MessageUtil.Instance.SendMessage(REQ_TO_SERVER_DEFINE.REQ_CHANGE_NICKNAME, nickname, controller.transmitStream);
+        }
+
+        public void ChangeNicknameColor(string color)
+        {
+            MessageUtil.Instance.SendMessage(REQ_TO_SERVER_DEFINE.REQ_CHANGE_NICKNAME_COLOR, color, controller.transmitStream);
+        }
+
+        public void ChangeChatColor(string color)
+        {
+            MessageUtil.Instance.SendMessage(REQ_TO_SERVER_DEFINE.REQ_CHANGE_CHAT_COLOR, color, controller.transmitStream);
+        }
+
+        public void LostConnect()
+        {
+            MessageUtil.Instance.SendMessage(REQ_TO_SERVER_DEFINE.REQ_LOST_CONNECT, "reqLost", controller.transmitStream);
         }
         #endregion
 
         #region Method Called By Server
-        private void SEND_CONNECT_FAIL(ConnectController controller, string msg)
+        private void SEND_CONNECT_LOST(ConnectController controller, string msg)
         {
             controller.getMessageState = MessageState.LostConnect;
             controller.isConnected = false;
-            mainVM.Show_ConnectFailPopup();
+
+            mainVM.Show_ConnectLostPopup($"서버 연결 종료됨 : {msg}");
         }
 
         private void SEND_SERVER_TITLE(ConnectController controller, string msg)
@@ -142,6 +165,30 @@ namespace ChatProgram.Model.Network
             string[] splitedMSG = msg.Split(',');
 
             mainVM.AddChatText(splitedMSG[0], splitedMSG[1], splitedMSG[2], splitedMSG[3]);
+        }
+
+        private void SEND_SUCCESE_CHANGENICKNAME(ConnectController controller, string msg)
+        {
+            if (mainVM.Nickname.Equals(msg))
+                mainVM.Succese_ChangeProperty("닉네임");
+            else
+                mainVM.Failed_ChangeProperty("닉네임");
+        }
+
+        private void SEND_SUCCESE_CHANGENICKNAMECOLOR(ConnectController controller, string msg)
+        {
+            if (mainVM.Nickname.Equals(msg))
+                mainVM.Succese_ChangeProperty("닉네임색상");
+            else
+                mainVM.Failed_ChangeProperty("닉네임색상");
+        }
+
+        private void SEND_SUCCESE_CHANGECHATCOLOR(ConnectController controller, string msg)
+        {
+            if (mainVM.Nickname.Equals(msg))
+                mainVM.Succese_ChangeProperty("채팅색상");
+            else
+                mainVM.Failed_ChangeProperty("채팅색상");
         }
         #endregion
     }

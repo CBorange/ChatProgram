@@ -146,6 +146,12 @@ namespace ChatProgram.Model.Network
                 MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CHAT_TRANSMIT, msg, connectControllers[i].transmitStream);
             }
         }
+
+        public void LostConnect()
+        {
+
+        }
+
         #endregion
 
         #region Method Called By Client
@@ -158,7 +164,7 @@ namespace ChatProgram.Model.Network
                 connectControllers.Remove(controller);
                 controller.isConnected = false;
                 controller.getMessageState = MessageState.LostConnect;
-                MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_FAIL, "ConnectFail", controller.transmitStream);
+                MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_LOST, "ConnectFail", controller.transmitStream);
                 return;
             }
 
@@ -176,17 +182,20 @@ namespace ChatProgram.Model.Network
 
         private void REQ_CHANGE_NICKNAME(ConnectController controller, string msg)
         {
-
+            controller.UserNickname = msg;
+            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGENICKNAME, msg, controller.transmitStream);
         }
 
         private void REQ_CHANGE_NICKNAME_COLOR(ConnectController controller, string msg)
         {
-
+            controller.UserNicknameColor = msg;
+            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGENICKNAMECOLOR, msg, controller.transmitStream);
         }
 
         private void REQ_CHANGE_CHAT_COLOR(ConnectController controller, string msg)
         {
-
+            controller.UserChatColor = msg;
+            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGECHATCOLOR, msg, controller.transmitStream);
         }
 
         private void REQ_CHAT_TRANSMIT(ConnectController controller, string msg)
@@ -205,6 +214,10 @@ namespace ChatProgram.Model.Network
             connectControllers.Remove(controller);
             controller.getMessageState = MessageState.LostConnect;
             controller.isConnected = false;
+
+            string titleMessage = $"{ServerTitle} : {connectControllers.Count + 1}명 연결중";
+            mainVM.ChangeServerStatus_CreateSuccese(titleMessage);
+            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_LOST, "ConnectLost", controller.transmitStream);
         }
         #endregion
     }
