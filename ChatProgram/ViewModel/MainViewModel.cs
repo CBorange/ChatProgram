@@ -285,12 +285,17 @@ namespace ChatProgram.ViewModel
                 return;
             }
 
+            if (serverCapacityInteger < 2)
+            {
+                MessageBox.Show("서버 허용량이 최소 2명 이상이여야 합니다.", "서버 프로퍼티 오류", MessageBoxButtons.OK);
+                return;
+            }
+
             if (serverCapacityInteger > 100)
             {
                 MessageBox.Show("서버 최대 허용량은 100명 까지 입니다.", "서버 프로퍼티 오류", MessageBoxButtons.OK);
                 return;
             }
-
 
             // 실행
             if (!chatProgramIsStart)
@@ -299,7 +304,6 @@ namespace ChatProgram.ViewModel
                 chatProgramIsStart = true;
                 ChatSettingPanelVisibility = true;
 
-                ChangeServerStatus_CreateSuccese(ServerTitle);
                 serverController.StartServer(ServerIP, ServerPassword, ServerTitle, serverCapacityInteger);
             }
             else

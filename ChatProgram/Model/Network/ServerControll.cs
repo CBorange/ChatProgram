@@ -75,7 +75,7 @@ namespace ChatProgram.Model.Network
             ServerTitle = serverTitle;
             ServerCapacity = serverCapacity;
 
-            connectControllers.Capacity = serverCapacity;
+            connectControllers.Capacity = serverCapacity - 1;
             AsyncStartServer();
         }
 
@@ -86,6 +86,8 @@ namespace ChatProgram.Model.Network
 
             tcpListener = new TcpListener(ip);
             tcpListener.Start();
+            string titleMessage = $"{ServerTitle}({connectControllers.Count + 1}/{ServerCapacity}) : {connectControllers.Count + 1}명 연결중";
+            mainVM.ChangeServerStatus_CreateSuccese(titleMessage);
             while (true)
             {
                 try
@@ -95,7 +97,7 @@ namespace ChatProgram.Model.Network
                     conectController.isConnected = true;
                     conectController.connectedClient = tc;
                     connectControllers.Add(conectController);
-
+                    
                     Task.Factory.StartNew(AsyncReadFromClient, conectController);
                 }
                 catch (Exception e)
@@ -173,6 +175,15 @@ namespace ChatProgram.Model.Network
         #region Method Called By Client
         private void REQ_SERVER_CONNECT(ConnectController controller, string msg)
         {
+            // 서버 허용량 초과하는지 검사
+            if (connectControllers.Count > ServerCapacity - 1)
+            {
+                connectControllers.Remove(controller);
+                controller.isConnected = false;
+                controller.getMessageState = MessageState.LostConnect;
+                MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_LOST, "서버 허용량 초과", controller.transmitStream);
+                return;
+            }
             // 비밀번호, 닉네임, 닉네임색상, 채팅색상 순으로 Splited
             string[] splitedCSV = msg.Split(',');
             if (Password != splitedCSV[0])  
@@ -180,7 +191,7 @@ namespace ChatProgram.Model.Network
                 connectControllers.Remove(controller);
                 controller.isConnected = false;
                 controller.getMessageState = MessageState.LostConnect;
-                MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_LOST, "ConnectFail", controller.transmitStream);
+                MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_LOST, "비밀번호 일치하지 않음", controller.transmitStream);
                 return;
             }
 
@@ -191,7 +202,7 @@ namespace ChatProgram.Model.Network
             controller.isConnected = true;
 
             
-            string titleMessage = $"{ServerTitle} : {connectControllers.Count + 1}명 연결중";
+            string titleMessage = $"{ServerTitle}({connectControllers.Count + 1}/{ServerCapacity}) : {connectControllers.Count + 1}명 연결중";
             mainVM.ChangeServerStatus_CreateSuccese(titleMessage);
             MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SERVER_TITLE, titleMessage, controller.transmitStream);
 
