@@ -149,6 +149,21 @@ namespace ChatProgram.Model.Network
             SendNoticeToClients(chatBody);
         }
 
+        public void ChangeNickname()
+        {
+            SendNoticeToClients($"서버의 닉네임이 {mainVM.Nickname}로 변경되었습니다.");
+        }
+
+        public void ChangeNicknameColor()
+        {
+            SendNoticeToClients($"서버의 닉네임색상이 {mainVM.NicknameColor}로 변경되었습니다.");
+        }
+
+        public void ChangeChatColor()
+        {
+            SendNoticeToClients($"서버의 채팅색상이 {mainVM.ChatColor}로 변경되었습니다.");
+        }
+
         public void LostConnect()
         {
             mainVM.Show_ConnectLostPopup("ConnectLost");

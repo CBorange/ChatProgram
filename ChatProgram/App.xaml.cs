@@ -18,6 +18,7 @@ namespace ChatProgram
         {
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
+            mainWindow.Activate();
         }
     }
 }

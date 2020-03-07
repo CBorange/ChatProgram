@@ -338,7 +338,7 @@ namespace ChatProgram.ViewModel
                 MessageBox.Show("이미 접속중입니다.", "오류", MessageBoxButtons.OK);
         }
 
-        private void SendMessage()
+        public void SendMessage()
         {
             if (chatProgramIsStart)
             {
@@ -348,7 +348,7 @@ namespace ChatProgram.ViewModel
                     clientController.WriteText(ChatText);
             }
             else
-                MessageBox.Show("먼저 접속하여 주세요.", "오류", MessageBoxButtons.OK);
+                MessageBox.Show("채팅을 보내기전에 먼저 서버에 접속하여 주세요.", "오류", MessageBoxButtons.OK);
         }
 
         private void ChangeNickname()
@@ -356,7 +356,10 @@ namespace ChatProgram.ViewModel
             if (chatProgramIsStart)
             {
                 if (mainController == MainController.ServerController)
+                {
+                    serverController.ChangeNickname();
                     MessageBox.Show("닉네임이 변경되었습니다.");
+                }
                 else
                     clientController.ChangeNickname(Nickname);
             }
@@ -369,7 +372,10 @@ namespace ChatProgram.ViewModel
             if (chatProgramIsStart)
             {
                 if (mainController == MainController.ServerController)
+                {
+                    serverController.ChangeNicknameColor();
                     MessageBox.Show("닉네임 색상이 변경되었습니다.");
+                }
                 else
                     clientController.ChangeNicknameColor(NicknameColor.ToString());
             }
@@ -382,7 +388,10 @@ namespace ChatProgram.ViewModel
             if (chatProgramIsStart)
             {
                 if (mainController == MainController.ServerController)
+                {
+                    serverController.ChangeChatColor();
                     MessageBox.Show("채팅 색상이 변경되었습니다.");
+                }
                 else
                     clientController.ChangeChatColor(ChatColor.ToString());
             }
