@@ -170,26 +170,36 @@ namespace ChatProgram.Model.Network
 
         private void SEND_SUCCESE_CHANGENICKNAME(ConnectController controller, string msg)
         {
-            if (mainVM.Nickname.Equals(msg))
+            string[] splitedMSG = msg.Split(',');
+            if (mainVM.Nickname.Equals(splitedMSG[0]))
+            {
+                mainVM.AddChatText(splitedMSG[0], splitedMSG[1], splitedMSG[2], splitedMSG[3]);
                 mainVM.Succese_ChangeProperty("닉네임");
+            }
             else
                 mainVM.Failed_ChangeProperty("닉네임");
         }
 
         private void SEND_SUCCESE_CHANGENICKNAMECOLOR(ConnectController controller, string msg)
         {
-            string colorCode = mainVM.NicknameColor.ToString();
-            if (colorCode.Equals(msg))
+            string[] splitedMSG = msg.Split(',');
+            if (mainVM.NicknameColor.Equals(splitedMSG[1]))
+            {
+                mainVM.AddChatText(splitedMSG[0], splitedMSG[1], splitedMSG[2], splitedMSG[3]);
                 mainVM.Succese_ChangeProperty("닉네임색상");
+            }
             else
                 mainVM.Failed_ChangeProperty("닉네임색상");
         }
 
         private void SEND_SUCCESE_CHANGECHATCOLOR(ConnectController controller, string msg)
         {
-            string colorCode = mainVM.ChatColor.ToString();
-            if (colorCode.Equals(msg))
+            string[] splitedMSG = msg.Split(',');
+            if (mainVM.ChatColor.Equals(splitedMSG[2])) 
+            {
+                mainVM.AddChatText(splitedMSG[0], splitedMSG[1], splitedMSG[2], splitedMSG[3]);
                 mainVM.Succese_ChangeProperty("채팅색상");
+            }
             else
                 mainVM.Failed_ChangeProperty("채팅색상");
         }

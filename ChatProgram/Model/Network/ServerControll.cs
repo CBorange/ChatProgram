@@ -178,20 +178,14 @@ namespace ChatProgram.Model.Network
             // 서버 허용량 초과하는지 검사
             if (connectControllers.Count > ServerCapacity - 1)
             {
-                connectControllers.Remove(controller);
-                controller.isConnected = false;
-                controller.getMessageState = MessageState.LostConnect;
-                MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_LOST, "서버 허용량 초과", controller.transmitStream);
+                SendConnectLostMessage(controller, msg);
                 return;
             }
             // 비밀번호, 닉네임, 닉네임색상, 채팅색상 순으로 Splited
             string[] splitedCSV = msg.Split(',');
             if (Password != splitedCSV[0])  
             {
-                connectControllers.Remove(controller);
-                controller.isConnected = false;
-                controller.getMessageState = MessageState.LostConnect;
-                MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_LOST, "비밀번호 일치하지 않음", controller.transmitStream);
+                SendConnectLostMessage(controller, msg);
                 return;
             }
 
@@ -215,21 +209,34 @@ namespace ChatProgram.Model.Network
                 MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CHAT_TRANSMIT, sendMessage, connectControllers[i].transmitStream);
             }
         }
+        private void SendConnectLostMessage(ConnectController controller, string msg)
+        {
+            connectControllers.Remove(controller);
+            controller.isConnected = false;
+            controller.getMessageState = MessageState.LostConnect;
+            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_LOST, "서버 허용량 초과", controller.transmitStream);
+        }
 
         private void REQ_CHANGE_NICKNAME(ConnectController controller, string msg)
         {
+            string message = $"[서버] '{controller.UserNickname}'유저의 닉네임이 '{msg}'로 변경되었습니다.";
+            string sendMessage = $"{controller.UserNickname},{controller.UserNicknameColor},{controller.UserChatColor},{msg}";
             controller.UserNickname = msg;
-            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGENICKNAME, msg, controller.transmitStream);
+            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGENICKNAME, sendMessage, controller.transmitStream);
         }
 
         private void REQ_CHANGE_NICKNAME_COLOR(ConnectController controller, string msg)
         {
+            string message = $"[서버] '{controller.UserNicknameColor}'유저의 닉네임 색상이 '{msg}'로 변경되었습니다.";
+            string sendMessage = $"{controller.UserNickname},{controller.UserNicknameColor},{controller.UserChatColor},{msg}";
             controller.UserNicknameColor = msg;
             MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGENICKNAMECOLOR, msg, controller.transmitStream);
         }
 
         private void REQ_CHANGE_CHAT_COLOR(ConnectController controller, string msg)
         {
+            string message = $"[서버] '{controller.UserChatColor}'유저의 채팅 색상이 '{msg}'로 변경되었습니다.";
+            string sendMessage = $"{controller.UserNickname},{controller.UserNicknameColor},{controller.UserChatColor},{msg}";
             controller.UserChatColor = msg;
             MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGECHATCOLOR, msg, controller.transmitStream);
         }
@@ -251,7 +258,7 @@ namespace ChatProgram.Model.Network
             controller.getMessageState = MessageState.LostConnect;
             controller.isConnected = false;
 
-            string titleMessage = $"{ServerTitle} : {connectControllers.Count + 1}명 연결중";
+            string titleMessage = $"{ServerTitle}({connectControllers.Count + 1}/{ServerCapacity}) : {connectControllers.Count + 1}명 연결중";
             mainVM.ChangeServerStatus_CreateSuccese(titleMessage);
             MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_LOST, "ConnectLost", controller.transmitStream);
 
