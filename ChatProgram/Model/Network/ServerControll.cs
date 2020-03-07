@@ -146,15 +146,7 @@ namespace ChatProgram.Model.Network
         #region Method Connected By MainVM
         public void WriteText(string chatBody)
         {
-            // View에 먼저 채팅내용 추가
-            mainVM.AddChatText($"[서버]{mainVM.Nickname}", mainVM.NicknameColor, mainVM.ChatColor, chatBody);
-            // 연결된 클라이언트들 Send Message
-            for (int i = 0; i < connectControllers.Count; ++i)
-            {
-                string nickname = $"[서버]{mainVM.Nickname}";
-                string msg = $"{nickname},{mainVM.NicknameColor},{mainVM.ChatColor},{chatBody}";
-                MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CHAT_TRANSMIT, msg, connectControllers[i].transmitStream);
-            }
+            SendNoticeToClients(chatBody);
         }
 
         public void LostConnect()
@@ -194,20 +186,12 @@ namespace ChatProgram.Model.Network
             controller.UserNicknameColor = splitedCSV[2];
             controller.UserChatColor = splitedCSV[3];
             controller.isConnected = true;
-
             
             string titleMessage = $"{ServerTitle}({connectControllers.Count + 1}/{ServerCapacity}) : {connectControllers.Count + 1}명 연결중";
             mainVM.ChangeServerStatus_CreateSuccese(titleMessage);
             MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SERVER_TITLE, titleMessage, controller.transmitStream);
 
-            // 연결 성공 알림
-            mainVM.AddChatText($"[서버]", mainVM.NicknameColor, mainVM.ChatColor, $"{controller.UserNickname}이(가) 연결되었습니다.");
-            for (int i = 0; i < connectControllers.Count; ++i)
-            {
-                string body = $"{controller.UserNickname}이(가) 연결되었습니다.";
-                string sendMessage = $"[서버],{mainVM.NicknameColor},{mainVM.ChatColor},{body}";
-                MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CHAT_TRANSMIT, sendMessage, connectControllers[i].transmitStream);
-            }
+            SendNoticeToClients($"{controller.UserNickname}이(가) 연결되었습니다.");
         }
         private void SendConnectLostMessage(ConnectController controller, string msg)
         {
@@ -219,26 +203,22 @@ namespace ChatProgram.Model.Network
 
         private void REQ_CHANGE_NICKNAME(ConnectController controller, string msg)
         {
-            string message = $"[서버] '{controller.UserNickname}'유저의 닉네임이 '{msg}'로 변경되었습니다.";
+            SendNoticeToClients($"[{controller.UserNickname}] 유저의 닉네임이 [{msg}]로 변경되었습니다.");
+
             controller.UserNickname = msg;
-            string sendMessage = $"{controller.UserNickname},{controller.UserNicknameColor},{controller.UserChatColor},{message}";
-            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGENICKNAME, sendMessage, controller.transmitStream);
+            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGENICKNAME, msg, controller.transmitStream);
         }
 
         private void REQ_CHANGE_NICKNAME_COLOR(ConnectController controller, string msg)
         {
-            string message = $"[서버] '{controller.UserNicknameColor}'유저의 닉네임 색상이 '{msg}'로 변경되었습니다.";
-            controller.UserNicknameColor = msg;
-            string sendMessage = $"{controller.UserNickname},{controller.UserNicknameColor},{controller.UserChatColor},{message}";
-            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGENICKNAMECOLOR, sendMessage, controller.transmitStream);
+            SendNoticeToClients($"[{controller.UserNickname}] 유저의 닉네임색상 이 [{msg}]로 변경되었습니다.");
+            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGENICKNAMECOLOR, msg, controller.transmitStream);
         }
 
         private void REQ_CHANGE_CHAT_COLOR(ConnectController controller, string msg)
         {
-            string message = $"[서버] '{controller.UserChatColor}'유저의 채팅 색상이 '{msg}'로 변경되었습니다.";
-            controller.UserChatColor = msg;
-            string sendMessage = $"{controller.UserNickname},{controller.UserNicknameColor},{controller.UserChatColor},{message}";
-            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGECHATCOLOR, sendMessage, controller.transmitStream);
+            SendNoticeToClients($"[{controller.UserNickname}] 유저의 채팅색상 이 [{msg}]로 변경되었습니다.");
+            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGECHATCOLOR, msg, controller.transmitStream);
         }
 
         private void REQ_CHAT_TRANSMIT(ConnectController controller, string msg)
@@ -247,7 +227,7 @@ namespace ChatProgram.Model.Network
             // 연결된 클라이언트들 Send Message
             for (int i = 0; i < connectControllers.Count; ++i)
             {
-                string message = $"{connectControllers[i].UserNickname},{connectControllers[i].UserNicknameColor},{connectControllers[i].UserChatColor},{msg}";
+                string message = $"{controller.UserNickname},{controller.UserNicknameColor},{controller.UserChatColor},{msg}";
                 MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CHAT_TRANSMIT, message, connectControllers[i].transmitStream);
             }
         }
@@ -263,11 +243,15 @@ namespace ChatProgram.Model.Network
             MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CONNECT_LOST, "ConnectLost", controller.transmitStream);
 
             // 연결 종료 알림
-            mainVM.AddChatText($"[서버]", mainVM.NicknameColor, mainVM.ChatColor, $"{controller.UserNickname}의 연결이 종료되었습니다.");
+            SendNoticeToClients($"{controller.UserNickname}의 연결이 종료되었습니다.");
+        }
+
+        private void SendNoticeToClients(string msg)
+        {
+            mainVM.AddChatText($"[서버]{mainVM.Nickname}", mainVM.NicknameColor, mainVM.ChatColor, msg);
             for (int i = 0; i < connectControllers.Count; ++i)
             {
-                string body = $"{controller.UserNickname}의 연결이 종료되었습니다.";
-                string sendMessage = $"[서버],{mainVM.NicknameColor},{mainVM.ChatColor},{body}";
+                string sendMessage = $"[서버]{mainVM.Nickname},{mainVM.NicknameColor},{mainVM.ChatColor},{msg}";
                 MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_CHAT_TRANSMIT, sendMessage, connectControllers[i].transmitStream);
             }
         }

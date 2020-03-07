@@ -164,44 +164,29 @@ namespace ChatProgram.Model.Network
         private void SEND_CHAT_TRANSMIT(ConnectController controller, string msg)
         {
             string[] splitedMSG = msg.Split(',');
-
             mainVM.AddChatText(splitedMSG[0], splitedMSG[1], splitedMSG[2], splitedMSG[3]);
         }
 
         private void SEND_SUCCESE_CHANGENICKNAME(ConnectController controller, string msg)
         {
-            string[] splitedMSG = msg.Split(',');
-            if (mainVM.Nickname.Equals(splitedMSG[0]))
-            {
-                mainVM.AddChatText(splitedMSG[0], splitedMSG[1], splitedMSG[2], splitedMSG[3]);
-                mainVM.Succese_ChangeProperty("닉네임");
-            }
-            else
-                mainVM.Failed_ChangeProperty("닉네임");
+            NoticeUserPropertyChanged("닉네임", mainVM.Nickname, msg);
         }
 
         private void SEND_SUCCESE_CHANGENICKNAMECOLOR(ConnectController controller, string msg)
         {
-            string[] splitedMSG = msg.Split(',');
-            if (mainVM.NicknameColor.Equals(splitedMSG[1]))
-            {
-                mainVM.AddChatText(splitedMSG[0], splitedMSG[1], splitedMSG[2], splitedMSG[3]);
-                mainVM.Succese_ChangeProperty("닉네임색상");
-            }
-            else
-                mainVM.Failed_ChangeProperty("닉네임색상");
+            NoticeUserPropertyChanged("닉네임색상", mainVM.NicknameColor.ToString(), msg);
         }
 
         private void SEND_SUCCESE_CHANGECHATCOLOR(ConnectController controller, string msg)
         {
-            string[] splitedMSG = msg.Split(',');
-            if (mainVM.ChatColor.Equals(splitedMSG[2])) 
-            {
-                mainVM.AddChatText(splitedMSG[0], splitedMSG[1], splitedMSG[2], splitedMSG[3]);
-                mainVM.Succese_ChangeProperty("채팅색상");
-            }
+            NoticeUserPropertyChanged("채팅색상", mainVM.ChatColor.ToString(), msg);
+        }
+        private void NoticeUserPropertyChanged(string propertyName, string varToCompare, string msg)
+        {
+            if (varToCompare.Equals(msg))
+                mainVM.Succese_ChangeProperty(propertyName);
             else
-                mainVM.Failed_ChangeProperty("채팅색상");
+                mainVM.Failed_ChangeProperty(propertyName);
         }
         #endregion
     }
