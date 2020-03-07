@@ -220,7 +220,7 @@ namespace ChatProgram.Model.Network
         private void REQ_CHANGE_NICKNAME(ConnectController controller, string msg)
         {
             string message = $"[서버] '{controller.UserNickname}'유저의 닉네임이 '{msg}'로 변경되었습니다.";
-            string sendMessage = $"{controller.UserNickname},{controller.UserNicknameColor},{controller.UserChatColor},{msg}";
+            string sendMessage = $"{controller.UserNickname},{controller.UserNicknameColor},{controller.UserChatColor},{message}";
             controller.UserNickname = msg;
             MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGENICKNAME, sendMessage, controller.transmitStream);
         }
@@ -228,17 +228,17 @@ namespace ChatProgram.Model.Network
         private void REQ_CHANGE_NICKNAME_COLOR(ConnectController controller, string msg)
         {
             string message = $"[서버] '{controller.UserNicknameColor}'유저의 닉네임 색상이 '{msg}'로 변경되었습니다.";
-            string sendMessage = $"{controller.UserNickname},{controller.UserNicknameColor},{controller.UserChatColor},{msg}";
+            string sendMessage = $"{controller.UserNickname},{controller.UserNicknameColor},{controller.UserChatColor},{message}";
             controller.UserNicknameColor = msg;
-            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGENICKNAMECOLOR, msg, controller.transmitStream);
+            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGENICKNAMECOLOR, sendMessage, controller.transmitStream);
         }
 
         private void REQ_CHANGE_CHAT_COLOR(ConnectController controller, string msg)
         {
             string message = $"[서버] '{controller.UserChatColor}'유저의 채팅 색상이 '{msg}'로 변경되었습니다.";
-            string sendMessage = $"{controller.UserNickname},{controller.UserNicknameColor},{controller.UserChatColor},{msg}";
+            string sendMessage = $"{controller.UserNickname},{controller.UserNicknameColor},{controller.UserChatColor},{message}";
             controller.UserChatColor = msg;
-            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGECHATCOLOR, msg, controller.transmitStream);
+            MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGECHATCOLOR, sendMessage, controller.transmitStream);
         }
 
         private void REQ_CHAT_TRANSMIT(ConnectController controller, string msg)
