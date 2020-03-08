@@ -77,6 +77,7 @@ namespace ChatProgram.Model.Network
 
             string msg = $"{ConnectPassword},{mainVM.Nickname},{mainVM.NicknameColor},{mainVM.ChatColor}";
             MessageUtil.Instance.SendMessage(REQ_TO_SERVER_DEFINE.REQ_SERVER_CONNECT, msg, controller.transmitStream);
+
             Task.Factory.StartNew(AsyncReadFromServer);
         }
 

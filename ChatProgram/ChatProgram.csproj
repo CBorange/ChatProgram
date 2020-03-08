@@ -68,7 +68,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\ChatProtocol\MessageHeader.cs" />
     <Compile Include="Model\Network\ClientController.cs" />
     <Compile Include="Model\Network\ServerControll.cs" />
     <Compile Include="Model\ChatProtocol\Message.cs" />

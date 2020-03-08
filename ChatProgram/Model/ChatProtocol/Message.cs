@@ -33,6 +33,23 @@ namespace ChatProgram.Model.ChatProtocol
         ClientController
     }
 
+    public class MessageHeader
+    {
+        public uint MSGTYPE;
+        public uint BODYLEN;
+
+        public byte[] GetBytes()
+        {
+            byte[] buffer = new byte[8];
+            byte[] msgTypeBytes = BitConverter.GetBytes(MSGTYPE);
+            byte[] bodyLengthBytes = BitConverter.GetBytes(BODYLEN);
+
+            Array.Copy(msgTypeBytes, 0, buffer, 0, 4);
+            Array.Copy(bodyLengthBytes, 0, buffer, 4, 4);
+            return buffer;
+        }
+    }
+
     public class REQ_TO_SERVER_DEFINE
     {
         public const uint REQ_SERVER_CONNECT = 0x01;    //csv 형태로 비밀번호, 닉네임, 닉네임색상, 채팅색상 전달
