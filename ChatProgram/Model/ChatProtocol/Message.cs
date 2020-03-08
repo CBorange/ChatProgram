@@ -45,13 +45,12 @@ namespace ChatProgram.Model.ChatProtocol
 
     public class SEND_TO_CLIENT_DEFINE
     {
-        // Server -> Client로 전송되는 모든 MSG는 User정보가 포함되어야 함
         public const uint SEND_CONNECT_LOST = 0x01; // 서버 연결 종료 문자열 전달
         public const uint SEND_SERVER_TITLE = 0x02; // 서버 제목 문자열 전달(연결 성공)
-        public const uint SEND_CHAT_TRANSMIT = 0x03; // 채팅 문자열 전달
-        public const uint SEND_SUCCESE_CHANGENICKNAME = 0x04;   // 닉네임 변경 성공 전달
-        public const uint SEND_SUCCESE_CHANGENICKNAMECOLOR = 0x05;   // 닉네임 변경 성공 전달
-        public const uint SEND_SUCCESE_CHANGECHATCOLOR = 0x06;   // 닉네임 변경 성공 전달
+        public const uint SEND_CHAT_TRANSMIT = 0x03; // csv 형태로 닉네임, 닉네임색상, 채팅색상 채팅 문자열 전달
+        public const uint SEND_SUCCESE_CHANGENICKNAME = 0x04;   // 닉네임 변경 성공 시 변경된 닉네임 전달
+        public const uint SEND_SUCCESE_CHANGENICKNAMECOLOR = 0x05;   // 닉네임 변경 성공 시 변경된 닉네임 색상 전달
+        public const uint SEND_SUCCESE_CHANGECHATCOLOR = 0x06;   // 닉네임 변경 성공 시 변경된 채팅 색상 전달
     }
 
     public class MessageUtil
