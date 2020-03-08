@@ -227,12 +227,16 @@ namespace ChatProgram.Model.Network
         private void REQ_CHANGE_NICKNAME_COLOR(ConnectController controller, string msg)
         {
             SendNoticeToClients($"[{controller.UserNickname}] 유저의 닉네임색상 이 [{msg}]로 변경되었습니다.");
+
+            controller.UserNicknameColor = msg;
             MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGENICKNAMECOLOR, msg, controller.transmitStream);
         }
 
         private void REQ_CHANGE_CHAT_COLOR(ConnectController controller, string msg)
         {
             SendNoticeToClients($"[{controller.UserNickname}] 유저의 채팅색상 이 [{msg}]로 변경되었습니다.");
+
+            controller.UserChatColor = msg;
             MessageUtil.Instance.SendMessage(SEND_TO_CLIENT_DEFINE.SEND_SUCCESE_CHANGECHATCOLOR, msg, controller.transmitStream);
         }
 
