@@ -1,8 +1,8 @@
 # ChatProgram
 ## 개요
-<img src ="/ReadmeIMG/ChatProgram_Main.PNG" width="400px"></img>   
-<img src ="/ReadmeIMG/ChatProgram_In.PNG" width="400px"></img>   
-네트워크 연습용으로 개발한 채팅프로그램입니다.   
+<img src ="ReadmeIMG/ChatProgram_Main.PNG" width="400px"></img>   
+<img src ="ReadmeIMG/ChatProgram_In.PNG" width="400px"></img>   
+네트워크 연습용으로 개발한 채팅프로그램입니다.
 1:N 통신을 지원하도록 개발하였습니다.
 
 **1인 개발**로 진행하였습니다.   
